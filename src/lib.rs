@@ -43,10 +43,6 @@ pub struct AppConfig {
 }
 
 impl AppConfig {
-    pub fn new_with_title(title: &str) -> Self {
-        AppConfig::default().title(title)
-    }
-
     pub fn title(mut self, title: &str) -> Self {
         self.title = title.to_string();
         self
@@ -132,6 +128,7 @@ pub fn initialize_glium(
 
     let vertex_buffer =
         VertexBuffer::new(&display, &shape).expect("Could not create vertex buffer");
+    // TODO: load fragment shader at compilation once it reaches a finished state:
     let fshader = std::fs::read_to_string("./src/shaders/fragment.glsl").unwrap();
     let program = Program::from_source(&display, shaders::VERTEX, &fshader, None)
         .expect("Could not create shader program");

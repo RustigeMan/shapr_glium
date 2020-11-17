@@ -41,6 +41,23 @@ float peek_instr() {
     return stack[stack_size - 1][0];
 }
 
+vec3 unpack_color_int(int color_int) {
+    float r = (0xFF0000 & color_int) >> 16;
+    float g = (0x00FF00 & color_int) >> 8;
+    float b = (0x0000FF & color_int);
+
+    return vec3(r / 0xFF, g / 0xFF, b / 0xFF);
+}
+
+vec3 unpack_color_float(float color_float) {
+    return unpack_color_int(int(color_float));
+}
+
+float pack_color(vec3 color) {
+    int color_int = (int(color.r * 0xFF) << 16) + (int(color.g * 0xFF) << 8) + int(color.b * 0xFF);
+    return float(color_int);
+}
+
 bool inside_primitive(float shape, float width, float height) {
     if (shape == NIL) {
         return false;
@@ -61,9 +78,14 @@ void process_instruction(float instr, float arg1, float arg2) {
         push(vec3(TRANS, translation));
         translation.x += arg1;
         translation.y += arg2;
+
     } else if (instr == COMPL) {
         push(vec3(COMPL, 0.0, 0.0));
         complement = !complement;
+
+    } else if (instr == FILL) {
+        push(vec3(FILL, pack_color(color.rgb), 0.0));
+        color = vec4(unpack_color_float(arg1), 0.0);
     }
 }
 
@@ -81,6 +103,8 @@ bool pop_instruction() {
         translation = vec2(arg1, arg2);
     } else if (instr == COMPL) {
         complement = !complement;
+    } else if (instr == FILL) {
+        color = vec4(unpack_color_float(arg1), 0.0);
     }
 
 }
@@ -101,7 +125,7 @@ void main() {
 
         if (instr <= TRIA) {
             if (inside_primitive(instr, arg1, arg2) ^^ complement) {
-                color = vec4(1.0, 1.0, 1.0, 1.0);
+                //color = vec4(1.0, 1.0, 1.0, 1.0);
                 return;
             }
             pop_finished();

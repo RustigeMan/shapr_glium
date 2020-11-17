@@ -10,7 +10,7 @@ struct App {}
 
 impl ShaprGliumApp for App {
     fn config(&self) -> AppConfig {
-        AppConfig::new_with_title("Shapr-Glium Example: Window")
+        AppConfig::default().title("Shapr-Glium Example: Window")
     }
 
     fn draw_frame(&mut self, _dt: Duration) -> Shp {

@@ -14,7 +14,7 @@ struct App {
 
 impl ShaprGliumApp for App {
     fn config(&self) -> AppConfig {
-        AppConfig::new_with_title("Shapr-Glium Example: Rectangle")
+        AppConfig::default().title("Shapr-Glium Example: Rectangle")
     }
 
     fn draw_frame(&mut self, dt: Duration) -> Shp {
@@ -28,7 +28,7 @@ impl ShaprGliumApp for App {
         if self.position.1.abs() > 1.0 {
             self.speed.0.1 *= -1.0;
         }
-        Shp::squa(0.5).trans(self.position)
+        Shp::squa(0.5).trans(self.position).fill([1.0, 0.5, 0.0])
     }
 }
 
